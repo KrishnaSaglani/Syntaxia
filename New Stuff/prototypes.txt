@@ -1,0 +1,14 @@
+Its important to have prototypes defined before the actual implementation
+as: 
+    better organisation
+    allows function calls before function even defined
+    allows us to even do type checking...acting as a safeguard
+    
+ex. 
+ int add(int, int);
+ int main() {....}
+ int add(int a, int b) {
+    return a + b;
+    }
+
+

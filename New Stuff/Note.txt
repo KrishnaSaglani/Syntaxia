@@ -1,0 +1,6 @@
+1. const char* vs char*
+Using const char* ptr instead of char* ptr is mainly
+ to enforce immutability and prevent accidental modification 
+ of the data being pointed to.
+
+ Use it in case of read only data such as in this case

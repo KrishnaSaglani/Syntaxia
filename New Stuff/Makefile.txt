@@ -1,0 +1,52 @@
+1. Note:
+./ implies that we are talking about current directory
+
+
+2.
+CC = gcc
+# Specifies the compiler
+CFLAGS = -g -c
+# Adds debugging info (-g) and compiles .c files into .o files (-c).
+LDFLAGS = -g
+# Adds debugging info during the linking phase
+INCLUDES = -I./
+# Ensures the compiler looks for header files in the current directory
+
+
+3.
+gcc -c main.c -o main.o
+ means we want compiler gcc to compile c file (-c) main.c
+ into object file (-o) main.object
+
+ gcc main.o utils.o -o my_program
+means we want to LINK object files main.o and utils.o into object file (-o) my_program
+Without -o my_program, gcc would default to creating an output file named a.out.
+
+
+4. executable files:
+
+Executables are fully compiled and linked programs that can be run directly. Whereas object files are 
+intermediate compiled files that are not yet executable...made for each and every c code...which 
+helps manage dependencies and reduces re-compilation time.
+
+ex.
+gcc -c main.c -o main.o
+gcc -c utils.c -o utils.o
+
+
+Once all .o files are compiled, they must be linked to create an executable
+gcc main.o utils.o -o my_program.exe   # On Windows
+gcc main.o utils.o -o my_program       # On Linux/Mac
+
+Note: these too use the -o tag 
+Note: Order of linking matters...
+here,things defined in main can be used by util but not vice versa 
+
+
+5.If your program is small and consists of only one .c file, you can compile it directly into an executable:
+
+gcc main.c -o my_program.exe   # Windows
+gcc main.c -o my_program       # Linux/Mac
+
+
+

@@ -1,0 +1,22 @@
+1. Calloc has two parameters: number of copies and size of each copy
+But malloc has only one
+
+2. Calloc initialises all to 0, But malloc makes it garbage values
+
+3. Malloc is faster
+
+
+Ex..
+
+arr = (int*) calloc(n, sizeof(int));
+printf("Array elements after calloc:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+
+arr = (int*) malloc(n * sizeof(int));
+printf("Array elements after malloc:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);  // May print garbage values
+    }
