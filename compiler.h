@@ -10,6 +10,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+enum{
+    LEXICAL_ANALYSIS_ALL_OK, 
+    LEXICAL_ANALYSIS_INPUT_ERROR
+};
+// Always use enumerations for such flags and definitions
+
 // Now lets define the various types of tokens
 enum{
     TOKEN_TYPE_IDENTIFIER,
@@ -58,15 +64,55 @@ struct pos
     // We are dealing with tokens from multiple files...like stdio.h, test.c, vector.h etc
 };
 
+
+struct lex_process;
+
+typedef char (*LEX_PROCESS_NEXT_CHAR) (struct lex_process* process);
+// This is a functoin
+// Basically, lex_process struct moves throughout the c code token by token
+// And simply uses these functons one by one to process and keep moving ahead...
+// Basically the lex_process structure inherits these functoins defined in below structure to 
+// process the string. This particular function simply reads the next char and returns it YAY
+
+// But the cool thing is...these aren't functoins...these are functoin pointers, hence they can be 
+// contained inside structs also. This is how we have inheritence in c...and it allows for very 
+// nice abstractions
+typedef char (*LEX_PROCESS_PEEK_CHAR) (struct lex_process * process);
+typedef void (*LEX_PROCESS_PUSH_CHAR) (struct lex_process * process, char ch);
+// The last one basically pushes a character to say a buffer or smth. We'll see soon.
+
+
+struct lex_process_functions
+{
+    LEX_PROCESS_NEXT_CHAR next_char;
+    LEX_PROCESS_PEEK_CHAR peek_char;
+    LEX_PROCESS_PUSH_CHAR push_char;
+};
+// don't forget typedef was present earlier, so we have renamed the functions here easily
+// Also, don't forget that these are function pointers not functions    
+// These will basically point to the three functions created in cprocess, and can even point to 
+// other even more efficient functions if required. How useful it is to use function pointers!
+
 //This here is the whole PROCESS of lexical analysis stored in a stuct
 struct lex_process
 {
-    struct pos pos;
-    struct vector * token_vector;
+    struct pos pos; 
+    struct vector * token_vec;
     // stores lots of tokens
     struct compile_process * compiler;
     // Points to the compiler process that this lexer is a part of
 
+    int current_expression_count;
+    // Basically, ([a]) for a this will be 2...as its inside 2 brackets
+
+    struct buffer* parenthesis_buffer;
+    struct lex_process_functions* function; 
+    // The functoin currently being employed
+
+
+    // Points to data that the lexer doesn't understand but the user
+    // only can understand
+    void * private;
 };
 
 enum 
@@ -82,6 +128,9 @@ struct compile_process
     //flags wrt how this file should be compiled
     int flags;
 
+    struct pos pos;
+    // This too moves ahead as a whole structure right with the lexer
+
     struct compile_process_input_file
     {
         FILE * fp;
@@ -94,11 +143,25 @@ struct compile_process
     // This was the output file
 };
 
-
+// Prototype for compiler.c
 int compile_file(const char* filename, const char* out_filename, int flags);
+// Prototype for cprocess.c
 struct compile_process * compile_process_create(const char* filename, const char* filename_out, int flags);
 
+// more Prototypes for cprocess.c
+char compiler_process_next_char( struct lex_process * lex_process);
+char compiler_process_peek_char (struct lex_process * lex_process);
+void compile_process_push_char (struct lex_process *lex_process, char c);
 
+
+// Prototypes for lex_process.c
+struct lex_process * lex_process_create( struct compile_process* compiler, struct lex_process_functions *functions, void * private);
+void lex_process_free( struct lex_process* process);
+void * lex_process_private(struct lex_process * process);
+struct vector * lex_process_tokens( struct lex_process * process);
+
+
+int lex(struct lex_process * process);
 
 
 #endif

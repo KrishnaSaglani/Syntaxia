@@ -1,0 +1,25 @@
+1. We are mostly passing structure by pointer as:
+Pass by value:
+    -simple, but can't modify function using this. Only a COPY of it is passed.
+    ALso, if struct is big... its becomes time consuming to pass a copy every time
+
+Pass by Reference:
+    void displayStudent(const Student &s) {  // Pass by reference (no copy)
+        cout << "Name: " << s.name << ", Age: " << s.age << endl;
+    }
+
+    -no need to pass copy...can modify data
+
+
+Pass by pointer:
+        void updateStudent(Student *s) {  // Pass pointer to structure
+        if (s) {  // Check for nullptr
+            s->age += 1;  // Modifies actual structure
+        }
+    }
+
+    -can modify data...better for dynamic memory management purposes
+
+
+
+

@@ -13,7 +13,7 @@ INCLUDES = -I./
 
 
 # 				Define object files
-OBJECTS = build/compiler.o build/cprocess.o build/helpers/buffer.o build/helpers/vector.o
+OBJECTS = build/compiler.o build/cprocess.o build/lexer.o build/lex_process.o build/helpers/buffer.o build/helpers/vector.o
 
 # 				Target executable
 TARGET = main.exe
@@ -31,6 +31,12 @@ build:
 # 				Compile source files into object files
 build/compiler.o: compiler.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o build/compiler.o compiler.c
+
+build/lexer.o: lexer.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o build/lexer.o lexer.c
+
+build/lex_process.o: lex_process.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o build/lex_process.o lex_process.c
 
 build/cprocess.o: cprocess.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o build/cprocess.o cprocess.c
